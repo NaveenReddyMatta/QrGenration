@@ -158,7 +158,9 @@ Enter data → Click Generate → Click Display → See QR
 mvn clean package
 
 
+# for Docker image
 
+expose port:8080
 
 
 
