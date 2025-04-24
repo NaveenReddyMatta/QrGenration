@@ -1,153 +1,165 @@
-# Spring Boot Calculator
+# QR Code Generator with Spring Boot
 
-A simple Spring Boot web application that performs basic arithmetic operations (Add, Subtract, Multiply, Divide) via a REST API and an HTML frontend.
-
----
-
-## Features
-
--  Four operations: Add, Subtract, Multiply, Divide
--  REST API endpoint using Spring Boot
--  Simple user interface built with HTML/CSS
--  Input validation (e.g., divide-by-zero check)
--  Lightweight and fast – no database required
+A simple Spring Boot web application that generates and stores QR codes using the ZXing library. Generated QR codes are saved locally and stores address in  Oracle database, and they can be accessed via REST API or a user-friendly HTML interface.
 
 ---
 
-## Tech Stack
+##  Features
 
-- Java 21 
-- Spring Boot 3.4.4
-- Maven
-- HTML/CSS
+- Generate QR codes from user input
+- Save QR code images locally under `/static/qrcodes`
+- Persist QR code metadata (data + file path) in Oracle DB
+- Display generated QR code on an HTML page
+- REST API and frontend integration
+
+
+---
+
+##  Tech Stack
+
+- **Java**: 17  
+- **Spring Boot**: 3.4.3  
+- **Frontend**: HTML/CSS  
+- **QR Library**: ZXing (core & javase)  
+- **Database**: Oracle  
+- **Build Tool**: Maven  
 
 ---
 
 ## Project Structure
 
-
-calculator/
+QrGeneration/
 
 ├── src/
 
-│      └── main/
+│   ├── main/
 
-│          ├── java/
+│   │   ├── java/
 
-│          │   └── com/example/calculator/
+│   │   │   └── com/qrcode/QrGeneration/
 
-│          │       ├── CalculatorApplication.java
+│   │   │       ├── QRCodeController.java
 
-│          │       └── controller/CalculatorController.java
+│   │   │       ├── QRCodeService.java
 
-│          └── resources/
+│   │   │       ├── QRCodeEntity.java
 
-│              ├── static/index.html
+│   │   │       └── QRCodeRepository.java
 
-│              └── application.properties
+│   │   └── resources/
 
-├── pom.xml""
+│   │       ├── static/
+
+│   │       │   ├── index.html
+
+│   │       │   └── qrcodes/
+
+│   │       └── application.properties
+
+├── pom.xml
+
+---
 
 
+##  How to Run (Windows & CentOS)
 
-## How to Run the Application
+##  Windows
 
-### On Windows
+##  Prerequisites
 
-1. **Clone the Repository**
-   
-     git clone https://github.com/NaveenReddyMatta/Calculator.git
-   
-     cd Calculator
-   
-3. **Install Java 21 and Maven**
+- Java 17 installed (`JAVA_HOME` set)
+- Maven installed and in `PATH`
+- Oracle DB running
 
-     Download Java JDK 21
+####  Steps
 
-     Download Maven
 
-     Add both to your system PATH
+git clone https://github.com/your-username/QrGeneration.git
 
-5. **Run the Application**
-   
-     mvn spring-boot:run
-  
-7. **Access the App Open your browser and visit:**
-   
-     http://localhost:8081
+cd QrGeneration
 
-  ### On CentOS
-1. **Clone the Repository**
-   
-     git clone https://github.com/NaveenReddyMatta/Calculator.git
-   
-     cd Calculator
-   
-3. **Install Java 21**
-   
-     sudo yum install java-21-openjdk
-   
-5. **Install Maven**
-   
-    sudo yum install maven    # For CentOS 7
-   
-     OR
-   
-    sudo dnf install maven    # For CentOS 8+
-   
-7. **Run the Application**
-   
-   mvn spring-boot:run
+ ## Edit src/main/resources/application.properties:
 
-9. **Access the App**
+spring.datasource.url=jdbc:oracle:thin:@localhost:1521:xe
+
+spring.datasource.username=your_username
+
+spring.datasource.password=your_password
+
+spring.jpa.hibernate.ddl-auto=update
+
+spring.jpa.database-platform=org.hibernate.dialect.OracleDialect
+
+Then run:
+
+
+command: mvn spring-boot:run
+
+Open your browser:
+
+http://localhost:8080
+
+## CentOS
+
+##  Prerequisites
+
+sudo yum install java-17-openjdk
+
+sudo yum install maven
+
+sudo yum install git
+
+Clone the project:
+
+git clone https://github.com/your-username/QrGeneration.git
+
+cd QrGeneration
+
+## Edit your database config in application.properties, then run:
+
+mkdir -p src/main/resources/static/qrcodes
+
+chmod -R 755 src/main/resources/static/qrcodes
+
+mvn spring-boot:run
+
+Open in browser:
+
+    http://<your-server-ip>:8080
+
+## Optional: Allow port through firewall:
+
+sudo firewall-cmd --add-port=8080/tcp --permanent
+
+sudo firewall-cmd --reload
+
+# API Endpoint
+
+Method - POST
+
+URL - /api/qrcode/generate
+
+Description - Generates a QR code and stores it
+
+
     
-   On the same system:
-   
-   http://localhost:8081
-   
-   From another machine (replace with server IP):
+# Frontend (HTML)
 
-       http://<your-server-ip>:8081
+Open src/main/resources/static/index.html in your browser or serve via Live Server.
 
-  ## Optional: Open firewall port
- 
-   sudo firewall-cmd --add-port=8081/tcp --permanent
+or 
 
-   sudo firewall-cmd --reload
+http://localhost:8080
 
- ## API Endpoint
+Enter data → Click Generate → Click Display → See QR
 
-Method- GET
+# Build Jar
 
-URL- /api/calculate   
-
-Description-   Performs arithmetic operation
-
-## Query Parameters
-
-| Name      | Type   | Description                              |
-|-----------|--------|------------------------------------------|
-| `num1`    | double | First number                             |
-| `num2`    | double | Second number                            |
-| `operation` | string | Select One of this `add`, `subtract`, `multiply`, `divide` |
+mvn clean package
 
 
-## UI Preview
 
-Visit in browser:
 
-http://localhost:8081
 
-## The HTML form lets users:
 
-   Enter two numbers
-   
-   Choose an operation
-   
-   Submit to see the result
-   
-## Build JAR File
 
-  To package the app:
-  
-  mvn clean package
